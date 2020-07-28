@@ -4,16 +4,19 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Random;
+import java.util.Scanner;
 
 public class Main {
 	private static Stack stack = new Stack();
 	private static Board board;
+	private static Scanner scanner = new Scanner(System.in);
 	
 	public static void main(String[] args) {
 		initBoard(args);
 		carveTo(0, 0);
+		System.out.println("Saving...");
 		board.save();
-		
+		scanner.close();
 	}
 
 	private static void initBoard(String[] args) {
@@ -28,8 +31,21 @@ public class Main {
 			board = new Board(width, height);
 			
 		} catch(Exception e) {
-			System.out.println("Error: Use arguments <int height [min 2], int width [min 2]>");
-			System.exit(456);
+			try {
+				System.out.print("Width of maze: ");
+				int width = Integer.parseInt(scanner.nextLine());
+				System.out.print("Height of maze: ");
+				int height = Integer.parseInt(scanner.nextLine());
+				
+				if (height < 2 || width < 2) {
+					throw new Exception("Height or width must be greater than 2");
+				} 
+				
+				board = new Board(width, height);
+				
+			} catch (Exception ee) {
+				initBoard(args);
+			}
 		}
 	}
 	
@@ -115,5 +131,9 @@ public class Main {
 		}
 		
 		return shuffled;
+	}
+	
+	public static Scanner getScanner() {
+		return scanner;
 	}
 }

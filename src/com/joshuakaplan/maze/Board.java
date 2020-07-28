@@ -1,9 +1,11 @@
 package com.joshuakaplan.maze;
 
+import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Scanner;
 
 public class Board {
 	private int width;
@@ -121,11 +123,33 @@ public class Board {
 	public void save() {
 		try {
 			String maze = toString();
-			FileWriter writer = new FileWriter("src/maze.txt");
+			String desktop = System.getProperty("user.home") + "\\Desktop";
+			BufferedWriter writer = new BufferedWriter(new FileWriter(new File(desktop, "maze.txt")));
 			writer.write(maze);
 			writer.close();
 		} catch (Exception e) {
-			e.printStackTrace();
+			System.out.println("Error finding path to desktop.");
+			manualSave();
+		}
+	}
+	
+	public void manualSave() {
+		Scanner scanner = Main.getScanner();
+		boolean validPath = false;
+		
+		while (!validPath) {
+			System.out.print("Please enter full path to file: ");
+			String path = scanner.nextLine();
+			
+			try {
+				File file = new File(path, "maze.txt");
+				BufferedWriter writer = new BufferedWriter(new FileWriter(file));
+				writer.write(toString());
+				writer.close();
+				validPath = true;
+			} catch(Exception e) {
+				System.out.println("Error: " + e.getMessage());
+			}
 		}
 	}
 }
